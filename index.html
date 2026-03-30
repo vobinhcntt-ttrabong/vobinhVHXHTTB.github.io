@@ -1,1 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lịch công tác</title>
 
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#f3f3f3;
+}
+
+.header {
+  background:#c62828;
+  color:white;
+  padding:15px;
+}
+
+.header h2 {margin:0;}
+
+.toolbar {
+  background:#b71c1c;
+  color:white;
+  padding:10px;
+}
+
+button {
+  padding:6px 10px;
+  margin-right:5px;
+  border:none;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+.btn {background:#ff7043;color:white;}
+.btn2 {background:#42a5f5;color:white;}
+
+.table-container {
+  padding:10px;
+}
+
+table {
+  width:100%;
+  border-collapse: collapse;
+  background:white;
+}
+
+th, td {
+  border:1px solid #ddd;
+  padding:8px;
+  text-align:left;
+}
+
+th {background:#eee;}
+
+.tag {
+  padding:3px 8px;
+  border-radius:5px;
+  font-size:12px;
+}
+
+.sang {background:#ffe082;}
+.chieu {background:#90caf9;}
+
+.search {
+  margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>UBND XÃ TÂY TRÀ BỒNG</h2>
+  <p id="weekText">Tuần hiện tại</p>
+</div>
+
+<div class="toolbar">
+  <button class="btn" onclick="loadThisWeek()">Tuần này</button>
+  <button class="btn2" onclick="window.print()">In lịch</button>
+</div>
+
+<div class="table-container">
+
+<input class="search" type="text" id="search" placeholder="Tìm nội dung..." onkeyup="searchTable()">
+
+<table id="myTable">
+<tr>
+  <th>Thứ</th>
+  <th>Buổi</th>
+  <th>Giờ</th>
+  <th>Nội dung</th>
+  <th>Chủ trì</th>
+  <th>Địa điểm</th>
+</tr>
+
+</table>
+
+</div>
+
+<script>
+
+// ===== DỮ LIỆU (CHỈ CẦN SỬA Ở ĐÂY) =====
+const data = [
+  {
+    thu:"Thứ 2",
+    buoi:"Sáng",
+    gio:"07:30",
+    noidung:"Làm việc tại cơ quan",
+    chutri:"-",
+    diadiem:"UBND xã"
+  },
+  {
+    thu:"Thứ 2",
+    buoi:"Chiều",
+    gio:"13:30",
+    noidung:"Họp Thường trực Đảng uỷ",
+    chutri:"Bí thư",
+    diadiem:"Phòng họp"
+  }
+];
+
+// ===== HIỂN THỊ =====
+function renderTable(list){
+  const table = document.getElementById("myTable");
+  table.innerHTML = `
+<tr>
+  <th>Thứ</th>
+  <th>Buổi</th>
+  <th>Giờ</th>
+  <th>Nội dung</th>
+  <th>Chủ trì</th>
+  <th>Địa điểm</th>
+</tr>
+`;
+
+  list.forEach(item=>{
+    const tagClass = item.buoi === "Sáng" ? "sang" : "chieu";
+
+    table.innerHTML += `
+<tr>
+  <td>${item.thu}</td>
+  <td><span class="tag ${tagClass}">${item.buoi}</span></td>
+  <td>${item.gio}</td>
+  <td>${item.noidung}</td>
+  <td>${item.chutri}</td>
+  <td>${item.diadiem}</td>
+</tr>
+`;
+  });
+}
+
+// ===== TÌM KIẾM =====
+function searchTable(){
+  const keyword = document.getElementById("search").value.toLowerCase();
+  const filtered = data.filter(item =>
+    item.noidung.toLowerCase().includes(keyword)
+  );
+  renderTable(filtered);
+}
+
+// ===== TUẦN HIỆN TẠI =====
+function loadThisWeek(){
+  const today = new Date();
+  document.getElementById("weekText").innerText =
+    "Hôm nay: " + today.toLocaleDateString();
+}
+
+// ===== LOAD BAN ĐẦU =====
+renderTable(data);
+loadThisWeek();
+
+</script>
+
+</body>
+</html>
